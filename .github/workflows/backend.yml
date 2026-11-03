@@ -3,14 +3,8 @@ name: Cheapkart Backend CI/CD
 on:
   push:
     branches: [main]
-    paths:
-      - "backend/**"
-      - ".github/workflows/backend.yml"
   pull_request:
     branches: [main]
-    paths:
-      - "backend/**"
-      - ".github/workflows/backend.yml"
 
 permissions:
   contents: read
@@ -19,9 +13,6 @@ jobs:
   validate:
     name: Install backend dependencies
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -31,7 +22,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -57,7 +48,7 @@ jobs:
       - name: Build and push backend image
         uses: docker/build-push-action@v6
         with:
-          context: ./backend
+          context: .
           platforms: linux/amd64
           push: true
           tags: |
